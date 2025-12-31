@@ -184,12 +184,19 @@ local SettingsSection = UserTab:Section({
 })
 
 -- 1. DROPDOWN TEMA
+-- 1. DROPDOWN TEMA
+local ThemeList = {"Gradient-Purple", "Gradient-Red", "Gradient-Blue", "Gradient-Green", "Gradient-Gold"}
+-- Validate Default
+if not table.find(ThemeList, CurrentTheme) then
+    CurrentTheme = ThemeList[1]
+end
+
 SettingsSection:Dropdown({
     Title = "Interface Theme",
     Desc = "Select UI Color",
     Multi = false,
     Required = true,
-    Items = {"Gradient-Purple", "Gradient-Red", "Gradient-Blue", "Gradient-Green", "Gradient-Gold"},
+    Items = ThemeList,
     Default = CurrentTheme,
     Callback = function(val)
         if val then
