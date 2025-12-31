@@ -28,7 +28,7 @@ local Lighting = game:GetService("Lighting")
 
 -- Tema 1: Default (Ungu)
 WindUI:AddTheme({
-    Name = "Purple",
+    Name = "Gradient-Purple",
     Accent = WindUI:Gradient({
         ["0"] = { Color = Color3.fromHex("#A855F7"), Transparency = 0 },
         ["100"] = { Color = Color3.fromHex("#000000"), Transparency = 0 },
@@ -37,7 +37,7 @@ WindUI:AddTheme({
 
 -- Tema 2: Merah
 WindUI:AddTheme({
-    Name = "Red",
+    Name = "Gradient-Red",
     Accent = WindUI:Gradient({
         ["0"] = { Color = Color3.fromHex("#DC2626"), Transparency = 0 },
         ["100"] = { Color = Color3.fromHex("#000000"), Transparency = 0 },
@@ -46,7 +46,7 @@ WindUI:AddTheme({
 
 -- Tema 3: Biru
 WindUI:AddTheme({
-    Name = "Blue",
+    Name = "Gradient-Blue",
     Accent = WindUI:Gradient({
         ["0"] = { Color = Color3.fromHex("#2563EB"), Transparency = 0 },
         ["100"] = { Color = Color3.fromHex("#000000"), Transparency = 0 },
@@ -55,7 +55,7 @@ WindUI:AddTheme({
 
 -- Tema 4: Hijau
 WindUI:AddTheme({
-    Name = "Green",
+    Name = "Gradient-Green",
     Accent = WindUI:Gradient({
         ["0"] = { Color = Color3.fromHex("#10B981"), Transparency = 0 },
         ["100"] = { Color = Color3.fromHex("#000000"), Transparency = 0 },
@@ -64,7 +64,7 @@ WindUI:AddTheme({
 
 -- Tema 5: Emas (Premium)
 WindUI:AddTheme({
-    Name = "Gold",
+    Name = "Gradient-Gold",
     Accent = WindUI:Gradient({
         ["0"] = { Color = Color3.fromHex("#FFD700"), Transparency = 0 },
         ["100"] = { Color = Color3.fromHex("#000000"), Transparency = 0 },
@@ -81,12 +81,12 @@ local PremiumList = {
 
 local IsPremium = false
 local UserStatus = "Free User"
-local CurrentTheme = "Purple" -- Default Theme
+local CurrentTheme = "Gradient-Purple" -- Default Theme
 
 if table.find(PremiumList, LocalPlayer.UserId) then
     IsPremium = true
     UserStatus = "PREMIUM 👑"
-    CurrentTheme = "Gold" -- Auto Gold jika premium
+    CurrentTheme = "Gradient-Gold" -- Auto Gold jika premium
 end
 
 -- ====================================================
@@ -188,17 +188,19 @@ SettingsSection:Dropdown({
     Title = "Interface Theme",
     Desc = "Select UI Color",
     Multi = false,
-    Required = false,
-    Items = {"Purple", "Red", "Blue", "Green", "Gold"},
+    Required = true,
+    Items = {"Gradient-Purple", "Gradient-Red", "Gradient-Blue", "Gradient-Green", "Gradient-Gold"},
     Default = CurrentTheme,
     Callback = function(val)
-        WindUI:SetTheme(val)
-        WindUI:Notify({
-            Title = "Theme Changed", 
-            Content = "Switched to " .. val, 
-            Duration = 2,
-            Icon = "solar:pallete-2-bold"
-        })
+        if val then
+            WindUI:SetTheme(val)
+            WindUI:Notify({
+                Title = "Theme Changed", 
+                Content = "Switched to " .. val, 
+                Duration = 2,
+                Icon = "solar:palette-2-bold"
+            })
+        end
     end
 })
 
