@@ -283,11 +283,11 @@ MainFrame.InputEnded:Connect(function(input) if input.UserInputType==Enum.UserIn
 
 function LoadMainScript()
     -- Set Authorization Token (Must match the one in aizhub.lua)
-    _G.AizHubAuthorized = "https://raw.githubusercontent.com/aiz-fun/Aiz-Hub/refs/heads/main/authorized.lua"
+    _G.AizHubAuthorized = "https://raw.githubusercontent.com/aiz-fun/Aiz/refs/heads/main/Aiz%20Hub/authorized.lua"
     
     -- URL RAW GITHUB SCRIPT UTAMA (AIZHUB.LUA)
     -- Saya mengasumsikan file aizhub.lua berada di repository yang sama
-    local MainScriptUrl = "https://raw.githubusercontent.com/aiz-fun/Aiz-Hub/refs/heads/main/aizhub.lua"
+    local MainScriptUrl = "https://raw.githubusercontent.com/aiz-fun/Aiz/refs/heads/main/Aiz%20Hub/aizhub.lua"
     
     local success, err = pcall(function()
         loadstring(game:HttpGet(MainScriptUrl))()
