@@ -263,15 +263,15 @@ local UniversalTab = Window:Tab({
 
 local HttpService = game:GetService("HttpService")
 
--- Load Images Database
+-- Load Images Database (LUA)
 local ImageDB = {}
 pcall(function()
-    ImageDB = HttpService:JSONDecode(game:HttpGet("https://raw.githubusercontent.com/aiz-fun/Aiz/refs/heads/main/Aiz%20Hub/image.json"))
+    ImageDB = loadstring(game:HttpGet("https://raw.githubusercontent.com/aiz-fun/Aiz/refs/heads/main/Aiz%20Hub/image.lua"))()
 end)
 
 -- Fallback if load fails
-if not ImageDB.baseplate then
-    ImageDB.baseplate = "https://tr.rbxcdn.com/180DAY-1ef078e0daa7568fa3a0088e9ee6b6b2/768/432/Image/Webp/noFilter"
+if not ImageDB or not ImageDB.baseplate then
+    ImageDB = { baseplate = "https://tr.rbxcdn.com/180DAY-1ef078e0daa7568fa3a0088e9ee6b6b2/768/432/Image/Webp/noFilter" }
 end
 
 UniversalTab:Section({ Title = "Scripts" })
