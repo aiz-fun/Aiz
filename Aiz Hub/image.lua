@@ -1,0 +1,3 @@
+return {
+    baseplate = "https://tr.rbxcdn.com/180DAY-1ef078e0daa7568fa3a0088e9ee6b6b2/768/432/Image/Webp/noFilter"
+}
