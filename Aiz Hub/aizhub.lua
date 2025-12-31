@@ -261,10 +261,26 @@ local UniversalTab = Window:Tab({
     Icon = "solar:planet-2-broken",
 })
 
+local HttpService = game:GetService("HttpService")
+
+-- Load Images Database
+local ImageDB = {}
+pcall(function()
+    ImageDB = HttpService:JSONDecode(game:HttpGet("https://raw.githubusercontent.com/aiz-fun/Aiz/refs/heads/main/Aiz%20Hub/image.json"))
+end)
+
+-- Fallback if load fails
+if not ImageDB.baseplate then
+    ImageDB.baseplate = "https://tr.rbxcdn.com/180DAY-1ef078e0daa7568fa3a0088e9ee6b6b2/768/432/Image/Webp/noFilter"
+end
+
 UniversalTab:Section({ Title = "Scripts" })
 UniversalTab:Paragraph({
     Title = "Infinite Yield",
     Desc = "FE Admin Commands",
+    Icon = "solar:shield-warning-bold",
+    Thumbnail = "ImageDB.baseplate",
+    ThumbnailSize = 80,
     Buttons = {{
         Title = "Main",
         Icon = "solar:play-bold",
