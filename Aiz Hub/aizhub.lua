@@ -6,7 +6,7 @@
 ]]
 
 -- [ SECURITY CHECK ] --
-local AuthorizedHost = "https://raw.githubusercontent.com/aiz-fun/Aiz-Hub/refs/heads/main/authorized.lua"
+local AuthorizedHost = "https://raw.githubusercontent.com/aiz-fun/Aiz/refs/heads/main/Aiz%20Hub/authorized.lua"
 
 if _G.AizHubAuthorized ~= AuthorizedHost then
     local Player = game:GetService("Players").LocalPlayer
