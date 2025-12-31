@@ -287,7 +287,7 @@ function LoadMainScript()
     
     -- URL RAW GITHUB SCRIPT UTAMA (AIZHUB.LUA)
     -- Saya mengasumsikan file aizhub.lua berada di repository yang sama
-    local MainScriptUrl = "https://raw.githubusercontent.com/aiz-fun/Aiz/refs/heads/main/Aiz%20Hub/aizhub.lua"
+    local MainScriptUrl = "https://raw.githubusercontent.com/aiz-fun/Aiz/refs/heads/main/Aiz%20Hub/aizhub.lua?t="..tostring(os.time())
     
     local success, err = pcall(function()
         loadstring(game:HttpGet(MainScriptUrl))()
