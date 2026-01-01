@@ -1,0 +1,286 @@
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local TeleportService = game:GetService("TeleportService")
+local Lighting = game:GetService("Lighting")
+
+-- ====================================================
+-- 1. DAFTARKAN TEMA (Manual Biar Work)
+-- ====================================================
+
+-- Tema 1: Default (Ungu)
+WindUI:AddTheme({
+    Name = "Purple",
+    Accent = WindUI:Gradient({
+        ["0"] = { Color = Color3.fromHex("#A855F7"), Transparency = 0 },
+        ["100"] = { Color = Color3.fromHex("#000000"), Transparency = 0 },
+    }, { Rotation = 0 }),
+})
+
+-- Tema 2: Merah
+WindUI:AddTheme({
+    Name = "Red",
+    Accent = WindUI:Gradient({
+        ["0"] = { Color = Color3.fromHex("#DC2626"), Transparency = 0 },
+        ["100"] = { Color = Color3.fromHex("#000000"), Transparency = 0 },
+    }, { Rotation = 0 }),
+})
+
+-- Tema 3: Biru
+WindUI:AddTheme({
+    Name = "Blue",
+    Accent = WindUI:Gradient({
+        ["0"] = { Color = Color3.fromHex("#2563EB"), Transparency = 0 },
+        ["100"] = { Color = Color3.fromHex("#000000"), Transparency = 0 },
+    }, { Rotation = 0 }),
+})
+
+-- Tema 4: Hijau
+WindUI:AddTheme({
+    Name = "Green",
+    Accent = WindUI:Gradient({
+        ["0"] = { Color = Color3.fromHex("#10B981"), Transparency = 0 },
+        ["100"] = { Color = Color3.fromHex("#000000"), Transparency = 0 },
+    }, { Rotation = 0 }),
+})
+
+-- Tema 5: Emas (Premium)
+WindUI:AddTheme({
+    Name = "Gold",
+    Accent = WindUI:Gradient({
+        ["0"] = { Color = Color3.fromHex("#FFD700"), Transparency = 0 },
+        ["100"] = { Color = Color3.fromHex("#000000"), Transparency = 0 },
+    }, { Rotation = 0 }),
+})
+
+-- ====================================================
+-- 2. PREMIUM CHECK
+-- ====================================================
+local PremiumList = {
+    8080406235,         
+    LocalPlayer.UserId, 
+}
+
+local IsPremium = false
+local UserStatus = "Free User"
+local CurrentTheme = "Purple" -- Default Theme
+
+if table.find(PremiumList, LocalPlayer.UserId) then
+    IsPremium = true
+    UserStatus = "PREMIUM 👑"
+    CurrentTheme = "Gold" -- Auto Gold jika premium
+end
+
+-- ====================================================
+-- 3. WINDOW SETUP
+-- ====================================================
+
+local Window = WindUI:CreateWindow({
+    Title = "Aiz Hub | Universal",
+    Icon = IsPremium and "solar:crown-bold" or "solar:planet-2-bold-duotone", 
+    Author = IsPremium and "Verified User" or "Free User",
+    Folder = "-168",
+    Size = UDim2.fromOffset(800, 550),
+    Transparent = true,
+    Theme = CurrentTheme, -- Menggunakan tema awal yg sudah ditentukan
+    Resizable = true,
+    HideSearchBar = true,
+    ScrollBarEnabled = true,
+    User = {
+        Enabled = true,
+        Anonymous = false,
+        Callback = function() setclipboard(LocalPlayer.DisplayName) end,
+    },
+})
+
+-- Notif Load
+WindUI:Notify({
+    Title = "Loaded",
+    Content = "Current Theme: " .. CurrentTheme,
+    Duration = 3,
+    Icon = "solar:pallete-2-bold"
+})
+
+-- ====================================================
+-- 4. LOGIKA DATA PROFIL
+-- ====================================================
+local onlineFriends = 0
+pcall(function()
+    for _, friend in pairs(LocalPlayer:GetFriendsOnline()) do 
+        onlineFriends = onlineFriends + 1 
+    end
+end)
+local joinDate = os.date("%d %B %Y", os.time() - (LocalPlayer.AccountAge * 86400))
+local avatarImage = "rbxthumb://type=AvatarHeadShot&id=" .. LocalPlayer.UserId .. "&w=420&h=420"
+
+-- ====================================================
+-- 5. UI CONTENT
+-- ====================================================
+
+local UserTab = Window:Tab({ Title = "User Profile", Icon = "solar:user-circle-bold", Locked = false })
+
+-- [[ KIRI: DATA ]]
+local IdentitySection = UserTab:Section({ Title = "My Identity", Side = "Left", Box = true, Icon = "solar:card-recieved-bold" })
+IdentitySection:Paragraph({
+    Title = LocalPlayer.DisplayName,
+    Desc = "Status: " .. UserStatus .. "\nFriends Online: " .. onlineFriends,
+    Image = avatarImage,
+    ImageSize = 65,
+    Buttons = {{ Title = "Copy Name", Icon = "solar:copy-bold", Callback = function() setclipboard(LocalPlayer.Name) end }}
+})
+
+local StatsSection = UserTab:Section({ Title = "My Stats", Side = "Left", Box = true, Icon = "solar:chart-square-bold" })
+StatsSection:Paragraph({ Title = "Username", Desc = "@" .. LocalPlayer.Name, Icon = "solar:user-id-bold" })
+StatsSection:Paragraph({ Title = "Join Date", Desc = joinDate, Icon = "solar:calendar-date-bold" })
+StatsSection:Paragraph({ Title = "Account Age", Desc = LocalPlayer.AccountAge .. " Days", Icon = "solar:history-bold" })
+
+-- [[ KANAN: PLAYER LIST ]]
+local PlayerListSection = UserTab:Section({ Title = "Server Players", Side = "Right", Box = true, Icon = "solar:global-bold" })
+
+local function AddPlayer(p)
+    local thumb = "rbxthumb://type=AvatarHeadShot&id=" .. p.UserId .. "&w=150&h=150"
+    PlayerListSection:Paragraph({
+        Title = p.DisplayName,
+        Desc = "@" .. p.Name,
+        Image = thumb,
+        ImageSize = 40,
+        Buttons = {{ Title = "Goto", Icon = "solar:map-point-bold", Callback = function() 
+            if p.Character then LocalPlayer.Character.HumanoidRootPart.CFrame = p.Character.HumanoidRootPart.CFrame end 
+        end }}
+    })
+end
+for _, p in ipairs(Players:GetPlayers()) do if p ~= LocalPlayer then AddPlayer(p) end end
+Players.PlayerAdded:Connect(function(p) task.wait(1) AddPlayer(p) end)
+
+-- [[ KANAN: SETTINGS (THEME FIX) ]]
+local SettingsSection = UserTab:Section({
+    Title = "Settings",
+    Side = "Right",
+    Box = true,
+    Icon = "solar:settings-bold-duotone"
+})
+
+-- 1. DROPDOWN TEMA (FIXED)
+SettingsSection:Dropdown({
+    Title = "Interface Theme",
+    Desc = "Select UI Color",
+    Multi = false,
+    Required = false,
+    -- Nama item harus SAMA PERSIS dengan nama di WindUI:AddTheme di atas
+    Items = {"Purple", "Red", "Blue", "Green", "Gold"},
+    Default = CurrentTheme,
+    Callback = function(val)
+        -- Fungsi ganti tema
+        WindUI:SetTheme(val)
+        
+    SettingsSection:Input({
+    Title = "Interface Theme",
+    Desc = "Select Ui Color",
+    InputIcon = "bird",
+    Type = "Input",
+    Placeholder = "Red - Purple - Blue - Green - Gold",
+    Callback = function(val) WindUI:SetTheme(val)
+        
+        -- Notifikasi konfirmasi
+        WindUI:Notify({
+            Title = "Theme Changed", 
+            Content = "Switched to " .. val, 
+            Duration = 2,
+            Icon = "solar:pallete-2-bold"
+        })
+    end
+})
+
+-- 2. INPUT WALKSPEED (PENGGANTI SLIDER)
+SettingsSection:Input({
+    Title = "WalkSpeed",
+    Desc = "Input speed number",
+    Placeholder = "e.g. 100",
+    InputIcon = "solar:running-bold",
+    Callback = function(text)
+        local num = tonumber(text)
+        if num and LocalPlayer.Character then
+            LocalPlayer.Character.Humanoid.WalkSpeed = num
+            WindUI:Notify({Title="Success", Content="Speed: "..num, Duration=1})
+        end
+    end
+})
+
+-- 3. INPUT JUMPPOWER
+SettingsSection:Input({
+    Title = "JumpPower",
+    Desc = "Input jump height",
+    Placeholder = "e.g. 50",
+    InputIcon = "solar:arrow-up-bold",
+    Callback = function(text)
+        local num = tonumber(text)
+        if num and LocalPlayer.Character then
+            LocalPlayer.Character.Humanoid.UseJumpPower = true
+            LocalPlayer.Character.Humanoid.JumpPower = num
+            WindUI:Notify({Title="Success", Content="Jump: "..num, Duration=1})
+        end
+    end
+})
+
+-- 4. UTILITY BUTTONS
+SettingsSection:Paragraph({
+    Title = "Actions",
+    Desc = "Server Control",
+    Buttons = {
+        {
+            Title = "Rejoin",
+            Icon = "solar:restart-circle-bold",
+            Callback = function() TeleportService:Teleport(game.PlaceId, LocalPlayer) end
+        },
+        {
+            Title = "Anti AFK",
+            Icon = "solar:shield-check-bold",
+            Callback = function()
+                local vu = game:GetService("VirtualUser")
+                LocalPlayer.Idled:Connect(function() vu:CaptureController() vu:ClickButton2(Vector2.new()) end)
+                WindUI:Notify({Title="Activated", Content="Anti-AFK is running", Duration=2})
+            end
+        }
+    }
+})
+    local MainSection = Window:Section({
+    Title = "Universal",
+    Icon = "solar:planet-2-broken",
+    Opened = true,
+})
+    local UniversalTab = MainSection:Tab({
+    Title = "Universal",
+    Icon = "solar:earth-broken", 
+    Locked = false,
+})
+    local AdminCommandsSection = UniversalTab:Section({ 
+    Title = "Admin Commands",
+    Box = True,
+    FontWeight = "SemiBold",
+    TextTransparency = 0.05,
+    TextXAlignment = "Left",
+    TextSize = 17,
+    Opened = true,
+})
+Paragraph = AdminCommandsSection:Paragraph({
+    Title = "Infinite Yield",
+    Desc = "Top 1 Of Admins Commands",
+    Image = "",
+    ImageSize = 30,
+    Thumbnail = "https://scriptblox.com/images/script/0-1767206313954.png",
+    ThumbnailSize = 80,
+    Locked = false,
+    Buttons = {
+        {
+            Icon = "solar:copy-broken",
+            Title = "Copy Script",
+            Callback = function() setclipboard(loadstring(game:HttpGet("https://raw.githubusercontent.com/edgeiy/infiniteyield/master/source"))()) end,
+        }
+        {
+            Icon = "solar:download-minimalistic-broken",
+            Title = "Execute Script",
+            Callback = function() loadstring(game:HttpGet("https://raw.githubusercontent.com/edgeiy/infiniteyield/master/source"))() end,
+        }
+    }
+})
+            
